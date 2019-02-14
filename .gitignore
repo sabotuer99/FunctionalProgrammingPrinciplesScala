@@ -1,5 +1,3 @@
-week1/sqrt/target
-week1/sqrt/project
-week1/example/target
-week1/example/project
+**/target
+**/project
 **/.idea/workspace.xml
