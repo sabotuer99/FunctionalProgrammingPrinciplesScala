@@ -58,5 +58,13 @@ object Main {
   /**
     * Exercise 3
     */
-  def countChange(money: Int, coins: List[Int]): Int = ???
+  def countChange(money: Int, coins: List[Int]): Int = {
+    def countChangeIter(money: Int, coins: List[Int]): Int = {
+      val usableCoins = coins.filter(_ <= money)
+      if (usableCoins.count(_ == money) == usableCoins.length) usableCoins.length
+      else countChangeIter(money, usableCoins.tail) + countChangeIter(money - usableCoins.head, usableCoins.tail)
+    }
+
+    countChangeIter(money, coins.sorted)
+  }
 }
