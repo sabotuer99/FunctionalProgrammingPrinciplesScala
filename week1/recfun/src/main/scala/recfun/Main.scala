@@ -58,13 +58,18 @@ object Main {
   /**
     * Exercise 3
     */
-  def countChange(money: Int, coins: List[Int]): Int = {
-    def countChangeIter(money: Int, coins: List[Int]): Int = {
-      val usableCoins = coins.filter(_ <= money)
-      if (usableCoins.count(_ == money) == usableCoins.length) usableCoins.length
-      else countChangeIter(money, usableCoins.tail) + countChangeIter(money - usableCoins.head, usableCoins.tail)
+  def countChange(money: Int, coins: List[Int]): BigInt = {
+    val zero = BigInt(0)
+    def ways(i: Int, memo: Map[Int, BigInt], subcoins: List[Int]): BigInt = {
+      if (subcoins.isEmpty) return memo.getOrElse(money, zero)
+
+      val coin = subcoins.head
+      val newMemo = memo + (i -> (memo.getOrElse(i, zero) + memo.getOrElse(i - coin, zero)))
+      val nexti = if(i == money) 0 else i + 1
+      val nextSubcoins = if(i == money) subcoins.tail else subcoins
+      ways(nexti, newMemo, nextSubcoins)
     }
 
-    countChangeIter(money, coins.sorted)
+    ways(0, Map(0 -> BigInt(1)), coins.sorted)
   }
 }

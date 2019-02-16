@@ -25,4 +25,8 @@ class CountChangeSuite extends FunSuite {
     assert(countChange(300,List(500,5,50,100,20,200,10)) === 1022)
   }
 
+  test("countChange: big money") {
+    assert(countChange(100000,List(500,5,50,100,20,200,10)) === BigInt("14263336664563651"))
+  }
+
 }
