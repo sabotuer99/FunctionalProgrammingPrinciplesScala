@@ -26,7 +26,7 @@ class PascalSuite extends FunSuite {
   }
 
   test("pascal: col=35,row=78") {
-    assert(pascal(35, 78) === BigInt.apply("18139751154740212157160"))
+    assert(pascal(35, 78) === BigInt("18139751154740212157160"))
   }
 
 }
