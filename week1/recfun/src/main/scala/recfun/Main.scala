@@ -14,26 +14,13 @@ object Main {
     * Exercise 1
     */
   def pascal(c: Int, r: Int): BigInt = {
-    def pascalIter(ci: Int, ri: Int, memo: Map[String, BigInt]): BigInt = {
-      val key = makeKey(ci, ri)
-      if (memo.contains(key)) return memo(key)
-
-      val leftKey = makeKey(ci - 1, ri - 1)
-      val rightKey = makeKey(ci, ri - 1)
-      val left = if (memo.contains(leftKey)) memo(leftKey) else BigInt.apply(0)
-      val right = if (memo.contains(rightKey)) memo(rightKey) else BigInt.apply(0)
-      val thisCell = left + right
-      val newMemo = if (ci == 0 || ci == ri) memo + (key -> BigInt.apply(1)) else memo + (key -> thisCell)
-
-      if (ci == c && ri == r) return newMemo(key)
-
+    def pascalIter(ci: Int, ri: Int, memo: Map[Int, BigInt]): BigInt = {
+      val left = if (memo.contains(ci - 1)) memo(ci - 1) else BigInt(0)
+      val right = if (memo.contains(ci)) memo(ci) else BigInt(0)
+      val newMemo = if (ci == 0 || ci == ri) memo + (ci -> BigInt(1)) else memo + (ci -> (left + right))
       val nextRi = if (ci == 0) ri + 1 else ri
       val nextCi = if (ci == 0) r + c - ri else ci - 1
-      pascalIter(nextCi, nextRi, newMemo)
-    }
-
-    def makeKey(c: Int, r: Int): String = {
-      c.toString + "_" + r.toString
+      if (ci == c && ri == r) newMemo(ci) else pascalIter(nextCi, nextRi, newMemo)
     }
 
     pascalIter(r + c, 0, Map())
