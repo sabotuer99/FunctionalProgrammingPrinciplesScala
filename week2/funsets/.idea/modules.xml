@@ -2,8 +2,8 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
-      <module fileurl="file://$PROJECT_DIR$/.idea/modules/funsets_726.iml" filepath="$PROJECT_DIR$/.idea/modules/funsets_726.iml" />
-      <module fileurl="file://$PROJECT_DIR$/.idea/modules/funsets_726-build.iml" filepath="$PROJECT_DIR$/.idea/modules/funsets_726-build.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/progfun1-funsets.iml" filepath="$PROJECT_DIR$/.idea/modules/progfun1-funsets.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/progfun1-funsets-build.iml" filepath="$PROJECT_DIR$/.idea/modules/progfun1-funsets-build.iml" />
     </modules>
   </component>
 </project>

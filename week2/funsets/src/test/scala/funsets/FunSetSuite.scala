@@ -110,5 +110,45 @@ class FunSetSuite extends FunSuite {
     }
   }
 
+  test("intersect contains only overlapping elements") {
+    new TestSets {
+      val i1 = union(s1, s2)
+      val i2 = union(s2, s3)
+      val s = intersect(i1, i2)
+      assert(contains(s, 2), "Contains 2")
+      assert(!contains(s, 1), "Does not contain 1")
+      assert(!contains(s, 3), "Does not contain 3")
+    }
+  }
+
+  test("diff contains only unique elements") {
+    new TestSets {
+      val d1 = union(s1, s2)
+      val s = diff(d1, s1)
+      assert(contains(s, 2), "Contains 2")
+      assert(!contains(s, 1), "Does not contain 1")
+      assert(!contains(s, 3), "Does not contain 3")
+    }
+  }
+
+  test("map multiplies values by 10") {
+    new TestSets {
+      val s = map(union(s1, s2), x => x * 10)
+      val y = map(s, x => x - 1)
+      assert(contains(s, 10), "Union 1")
+      assert(contains(s, 20), "Union 2")
+      assert(contains(y, 9), "Union 3")
+      assert(contains(y, 19), "Union 4")
+    }
+  }
+
+  test("filter values greater than 15") {
+    new TestSets {
+      val s = filter(map(union(s1, s2), x => x * 10), x => x <= 15)
+      assert(contains(s, 10), "Passed filter")
+      assert(!contains(s, 20), "Filtered")
+    }
+  }
+
 
 }
