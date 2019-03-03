@@ -65,7 +65,7 @@ abstract class TweetSet {
     * Question: Should we implment this method here, or should it remain abstract
     * and be implemented in the subclasses?
     */
-  def mostRetweeted: Tweet = this.descendingByRetweet.head
+  def mostRetweeted: Tweet
 
 
   /**
@@ -111,7 +111,7 @@ abstract class TweetSet {
 class Empty extends TweetSet {
   def filterAcc(p: Tweet => Boolean, acc: TweetSet): TweetSet = acc
 
-  override def mostRetweeted: Tweet = throw new NoSuchElementException("Empty.mostRetweeted")
+  def mostRetweeted: Tweet = throw new NoSuchElementException("Empty.mostRetweeted")
 
   override def descendingByRetweet: TweetList = Nil
 
@@ -134,26 +134,43 @@ class Empty extends TweetSet {
 
 class NonEmpty(elem: Tweet, left: TweetSet, right: TweetSet) extends TweetSet {
 
+  var _mostRetweeted : Tweet = null
+
   def filterAcc(p: Tweet => Boolean, acc: TweetSet): TweetSet = {
     val newAcc = if (p(elem)) acc.incl(elem) else acc
     (left union right).filterAcc(p, newAcc)
   }
 
   override def descendingByRetweet: TweetList = {
-    if (left.isEmpty) new Cons(elem, right.descendingByRetweet)
-    else (right.incl(elem) union left).descendingByRetweet
+    val head = mostRetweeted
+    val rest = remove(mostRetweeted).descendingByRetweet
+    new Cons(head, rest)
   }
 
   override def isEmpty = false
+
+  override def union(that: TweetSet): TweetSet = {
+    ((right union left) union that) incl elem
+  }
+
+  override def mostRetweeted: Tweet = {
+    if (_mostRetweeted != null) _mostRetweeted
+    else {
+      val leftMR = if (left.isEmpty) elem else left.mostRetweeted
+      val rightMR = if (right.isEmpty) elem else right.mostRetweeted
+      _mostRetweeted = List(leftMR,rightMR,elem).max(Ordering.by((_: Tweet).retweets))
+      _mostRetweeted
+    }
+  }
 
   /**
     * The following methods are already implemented
     */
 
   def contains(x: Tweet): Boolean =
-    if (x.text < elem.text) left.contains(x)
-    else if (elem.text < x.text) right.contains(x)
-    else true
+  if (x.text < elem.text) left.contains(x)
+  else if (elem.text < x.text) right.contains(x)
+  else true
 
   def incl(x: Tweet): TweetSet = {
     if (x.text < elem.text) new NonEmpty(elem, left.incl(x), right)
@@ -161,19 +178,16 @@ class NonEmpty(elem: Tweet, left: TweetSet, right: TweetSet) extends TweetSet {
     else this
   }
 
-  def remove(tw: Tweet): TweetSet =
+  def remove(tw: Tweet): TweetSet = {
     if (tw.text < elem.text) new NonEmpty(elem, left.remove(tw), right)
     else if (elem.text < tw.text) new NonEmpty(elem, left, right.remove(tw))
     else left.union(right)
+  }
 
   def foreach(f: Tweet => Unit): Unit = {
     f(elem)
     left.foreach(f)
     right.foreach(f)
-  }
-
-  override def union(that: TweetSet): TweetSet = {
-    ((left union right) union that) incl elem
   }
 }
 
@@ -189,6 +203,8 @@ trait TweetList {
       f(head)
       tail.foreach(f)
     }
+
+  override def toString = "[" + head + "]\n" + tail.toString
 }
 
 object Nil extends TweetList {
@@ -197,6 +213,8 @@ object Nil extends TweetList {
   def tail = throw new java.util.NoSuchElementException("tail of EmptyList")
 
   def isEmpty = true
+
+  override def toString = "."
 }
 
 class Cons(val head: Tweet, val tail: TweetList) extends TweetList {
