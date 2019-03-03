@@ -134,7 +134,7 @@ class Empty extends TweetSet {
 
 class NonEmpty(elem: Tweet, left: TweetSet, right: TweetSet) extends TweetSet {
 
-  var _mostRetweeted : Tweet = null
+  //var _mostRetweeted : Tweet = null
 
   def filterAcc(p: Tweet => Boolean, acc: TweetSet): TweetSet = {
     val newAcc = if (p(elem)) acc.incl(elem) else acc
@@ -157,13 +157,15 @@ class NonEmpty(elem: Tweet, left: TweetSet, right: TweetSet) extends TweetSet {
   }
 
   override def mostRetweeted: Tweet = {
-    if (_mostRetweeted != null) _mostRetweeted
-    else {
+//    Memoizing probably helps performance but it makes the style checker cry... T_T
+//    if (_mostRetweeted != null) _mostRetweeted
+//    else {
       val leftMR = if (left.isEmpty) elem else left.mostRetweeted
       val rightMR = if (right.isEmpty) elem else right.mostRetweeted
-      _mostRetweeted = List(leftMR,rightMR,elem).max(Ordering.by((_: Tweet).retweets))
-      _mostRetweeted
-    }
+      List(leftMR,rightMR,elem).max(Ordering.by((_: Tweet).retweets))
+//      _mostRetweeted = List(leftMR,rightMR,elem).max(Ordering.by((_: Tweet).retweets))
+//      _mostRetweeted
+//    }
   }
 
   /**
@@ -229,14 +231,14 @@ object GoogleVsApple {
   val google = List("android", "Android", "galaxy", "Galaxy", "nexus", "Nexus")
   val apple = List("ios", "iOS", "iphone", "iPhone", "ipad", "iPad")
 
-  lazy val googleTweets: TweetSet = ???
-  lazy val appleTweets: TweetSet = ???
+  lazy val googleTweets: TweetSet = TweetReader.allTweets.filter(t => google.exists(t.text.contains))
+  lazy val appleTweets: TweetSet = TweetReader.allTweets.filter(t => apple.exists(t.text.contains))
 
   /**
     * A list of all tweets mentioning a keyword from either apple or google,
     * sorted by the number of retweets.
     */
-  lazy val trending: TweetList = ???
+  lazy val trending: TweetList = googleTweets.union(appleTweets).descendingByRetweet
 }
 
 object Main extends App {

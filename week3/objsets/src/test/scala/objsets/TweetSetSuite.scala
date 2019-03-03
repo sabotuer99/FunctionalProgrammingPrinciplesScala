@@ -81,4 +81,8 @@ class TweetSetSuite extends FunSuite {
     val all = TweetReader.allTweets
   }
 
+  test("Google and Apple trending tweets"){
+    val trending = GoogleVsApple.trending
+  }
+
 }
