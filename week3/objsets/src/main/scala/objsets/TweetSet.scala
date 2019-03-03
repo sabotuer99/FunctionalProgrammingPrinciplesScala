@@ -134,7 +134,7 @@ class Empty extends TweetSet {
 
 class NonEmpty(elem: Tweet, left: TweetSet, right: TweetSet) extends TweetSet {
 
-  //var _mostRetweeted : Tweet = null
+  var _mostRetweeted : Tweet = null
 
   def filterAcc(p: Tweet => Boolean, acc: TweetSet): TweetSet = {
     val newAcc = if (p(elem)) acc.incl(elem) else acc
@@ -150,6 +150,7 @@ class NonEmpty(elem: Tweet, left: TweetSet, right: TweetSet) extends TweetSet {
   override def isEmpty = false
 
   override def union(that: TweetSet): TweetSet = {
+    // Style checker doesn't like mutable local variables...
     var acc: TweetSet = new Empty
     this.foreach(t => {acc = acc.incl(t)})
     that.foreach(t => {acc = acc.incl(t)})
@@ -157,15 +158,15 @@ class NonEmpty(elem: Tweet, left: TweetSet, right: TweetSet) extends TweetSet {
   }
 
   override def mostRetweeted: Tweet = {
-//    Memoizing probably helps performance but it makes the style checker cry... T_T
-//    if (_mostRetweeted != null) _mostRetweeted
-//    else {
+    // Memoizing probably helps performance but it makes the style checker cry... T_T
+    if (_mostRetweeted != null) _mostRetweeted
+    else {
       val leftMR = if (left.isEmpty) elem else left.mostRetweeted
       val rightMR = if (right.isEmpty) elem else right.mostRetweeted
       List(leftMR,rightMR,elem).max(Ordering.by((_: Tweet).retweets))
-//      _mostRetweeted = List(leftMR,rightMR,elem).max(Ordering.by((_: Tweet).retweets))
-//      _mostRetweeted
-//    }
+      _mostRetweeted = List(leftMR,rightMR,elem).max(Ordering.by((_: Tweet).retweets))
+      _mostRetweeted
+    }
   }
 
   /**
