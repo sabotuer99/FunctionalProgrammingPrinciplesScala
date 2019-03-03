@@ -138,7 +138,7 @@ class NonEmpty(elem: Tweet, left: TweetSet, right: TweetSet) extends TweetSet {
 
   def filterAcc(p: Tweet => Boolean, acc: TweetSet): TweetSet = {
     val newAcc = if (p(elem)) acc.incl(elem) else acc
-    (left union right).filterAcc(p, newAcc)
+    left.filterAcc(p, right.filterAcc(p, newAcc))
   }
 
   override def descendingByRetweet: TweetList = {
