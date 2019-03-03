@@ -150,7 +150,10 @@ class NonEmpty(elem: Tweet, left: TweetSet, right: TweetSet) extends TweetSet {
   override def isEmpty = false
 
   override def union(that: TweetSet): TweetSet = {
-    ((right union left) union that) incl elem
+    var acc: TweetSet = new Empty
+    this.foreach(t => {acc = acc.incl(t)})
+    that.foreach(t => {acc = acc.incl(t)})
+    acc
   }
 
   override def mostRetweeted: Tweet = {

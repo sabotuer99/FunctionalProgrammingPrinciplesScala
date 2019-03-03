@@ -77,4 +77,8 @@ class TweetSetSuite extends FunSuite {
     }
   }
 
+  test("all tweets"){
+    val all = TweetReader.allTweets
+  }
+
 }
