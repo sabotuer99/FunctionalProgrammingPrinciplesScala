@@ -20,7 +20,7 @@ class ListSuite extends FunSuite{
 
   test("List() == Nil") {
     val sut = List()
-    assert(sut == new Nil)
+    assert(sut == Nil)
   }
 
 }
