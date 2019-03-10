@@ -28,6 +28,29 @@ class HuffmanSuite extends FunSuite {
     }
   }
 
+  test("time with one letter repeated"){
+    val test = string2Chars("aaaaa")
+    val sut = times(test)
+    assert(sut.toMap.apply('a') == 5)
+  }
+
+  test("time with several letter repeated"){
+    val test = string2Chars("ababababaecdcdc")
+    val sut = times(test)
+    assert(sut.toMap.apply('a') == 5)
+    assert(sut.toMap.apply('b') == 4)
+    assert(sut.toMap.apply('c') == 3)
+    assert(sut.toMap.apply('d') == 2)
+    assert(sut.toMap.apply('e') == 1)
+  }
+
+  test("generic until test"){
+    val over100 = (x: Int) => x > 100
+    val double = (x: Int) => x * 2
+    val test = until(over100,double)(10)
+    // 10 -> 20 -> 40 -> 80 -> 160
+    assert(test == 160)
+  }
 
   test("string2chars(\"hello, world\")") {
     assert(string2Chars("hello, world") === List('h', 'e', 'l', 'l', 'o', ',', ' ', 'w', 'o', 'r', 'l', 'd'))
@@ -44,6 +67,10 @@ class HuffmanSuite extends FunSuite {
     assert(combine(leaflist) === List(Fork(Leaf('e',1),Leaf('t',2),List('e', 't'),3), Leaf('x',4)))
   }
 
+  test("Tell me your secret, Frenchie!"){
+    val secret = decodedSecret
+    assert(secret.mkString("") == "huffmanestcool")
+  }
 
   test("decode and encode a very short text should be identity") {
     new TestTrees {
