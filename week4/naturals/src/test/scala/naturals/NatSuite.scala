@@ -27,4 +27,9 @@ class NatSuite extends FunSuite{
     assert(Succ.toInt(sut) == 10)
   }
 
+  test("Succ.from(6) - Succ.from(5) is Succ[1]"){
+    val sut = Succ.from(6) - Succ.from(5)
+    assert(Succ.toInt(sut) == 1)
+  }
+
 }
