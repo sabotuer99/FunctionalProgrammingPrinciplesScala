@@ -215,10 +215,10 @@ object Huffman {
     def encodeIter(sub: CodeTree)(remainder: List[Char], bits: List[Bit]): List[Bit] =
       if(remainder == Nil) bits
       else sub match {
-        case Leaf(_,_) => bits ::: encodeIter(tree)(remainder,Nil)
+        case Leaf(_,_) => encodeIter(tree)(remainder.tail,bits)
         case Fork(left,right,_,_) =>
-          if (chars(left).contains(remainder.head)) encodeIter(left)(remainder,List(0) ::: bits)
-          else if (chars(right).contains(remainder.head)) encodeIter(right)(remainder,List(1) ::: bits)
+          if (chars(left).contains(remainder.head)) encodeIter(left)(remainder,bits ::: List(0))
+          else if (chars(right).contains(remainder.head)) encodeIter(right)(remainder,bits ::: List(1))
           else throw new Error("Unknown character '" + remainder.head + "'")
       }
     encodeIter(tree)(text, Nil)
